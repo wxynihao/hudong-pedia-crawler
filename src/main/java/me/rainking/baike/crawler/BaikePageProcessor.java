@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import me.rainking.baike.repository.BaikeRepository;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -69,10 +70,10 @@ public class BaikePageProcessor implements PageProcessor {
         //从页面发现后续的url地址来抓取
         //分类详情页获取子分类的链接
         String pageUrl = page.getUrl().toString();
-        if (pageUrl.indexOf("fenlei") != -1 && pageUrl.indexOf("list") == -1) {
+        if (pageUrl.contains("fenlei") && !pageUrl.contains("list")) {
             List<String> catalogList = page.getHtml()
                     .xpath("//div[@class='sort']//p[2]").links().all()
-                    .stream().map(url -> getShortUrl(url)).collect(toList());
+                    .stream().map(this::getShortUrl).collect(toList());
             page.addTargetRequests(catalogList);
 
             //分类全部词条页链接
@@ -83,15 +84,15 @@ public class BaikePageProcessor implements PageProcessor {
 
 
         //分类全部词条页获取词条页的链接
-        if (pageUrl.indexOf("list") != -1) {
+        if (pageUrl.contains("list")) {
             List<String> itemList = page.getHtml()
                     .links()
                     .regex("http://www\\.baike\\.com/wiki/.*")
                     .all()
                     .stream()
                     //过滤掉已经下载入库的词条
-                    .filter(itemUrl -> notInDb(itemUrl))
-                    .map(itemUrl -> getShortUrl(itemUrl)).collect(toList());
+                    .filter(this::notInDb)
+                    .map(this::getShortUrl).collect(toList());
 
             page.addTargetRequests(itemList);
         }
@@ -189,7 +190,7 @@ public class BaikePageProcessor implements PageProcessor {
         Document doc = Jsoup.parseBodyFragment(summaryHtml);
         Elements fields = doc.select("p");
 
-        return fields.stream().map(field -> field.text()).collect(Collectors.joining("\n"));
+        return fields.stream().map(Element::text).collect(Collectors.joining("\n"));
 
     }
 
@@ -234,7 +235,7 @@ public class BaikePageProcessor implements PageProcessor {
         Document doc = Jsoup.parseBodyFragment(categoryHtml);
         Elements fields = doc.select("a");
 
-        return fields.stream().map(field -> field.text()).collect(Collectors.joining(" "));
+        return fields.stream().map(Element::text).collect(Collectors.joining(" "));
     }
 
     /**
