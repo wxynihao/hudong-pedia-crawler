@@ -50,16 +50,16 @@ public class BaikeApplication implements CommandLineRunner {
     @Override
     public void run(String... strings) throws Exception {
 
-//        String category = URLEncoder.encode(nameOfRootCategory, "utf-8");
-//
-//        Spider.create(new BaikePageProcessor())
-//                //将爬取的数据存入mngodb
-//                .addPipeline(baikeMongodbPipeline)
-//                //种子链接为军事分类首页与军事全部词条页
-//                .addUrl("http://fenlei.baike.com/" + category, "http://fenlei.baike.com/" + category + "/list/")
-//                //开启5个线程抓取
-//                .thread(5)
-//                //启动爬虫
-//                .run();
+        String category = URLEncoder.encode(nameOfRootCategory, "utf-8");
+
+        Spider.create(new BaikePageProcessor())
+                //将爬取的数据存入mngodb
+                .addPipeline(baikeMongodbPipeline)
+                //种子链接为军事分类首页与军事全部词条页
+                .addUrl("http://fenlei.baike.com/" + category, "http://fenlei.baike.com/" + category + "/list/")
+                //开启5个线程抓取
+                .thread(5)
+                //启动爬虫
+                .run();
     }
 }
