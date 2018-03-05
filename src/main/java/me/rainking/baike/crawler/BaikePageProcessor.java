@@ -6,6 +6,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.processor.PageProcessor;
@@ -25,6 +26,7 @@ import static java.util.stream.Collectors.toList;
  * @Date: 2018/2/28 16:29
  */
 @Slf4j
+@Component("baikePageProcessor")
 public class BaikePageProcessor implements PageProcessor {
 
     @Autowired
@@ -108,7 +110,7 @@ public class BaikePageProcessor implements PageProcessor {
     }
 
     private String makeQueryStringAllRegExp(String str) {
-        if (str == null || str.trim().equals("")) {
+        if (str == null || "".equals(str.trim())) {
             return str;
         }
 
@@ -257,8 +259,8 @@ public class BaikePageProcessor implements PageProcessor {
     /**
      * 根据分类名称，生成分类全部词条页面的链接
      *
-     * @param cataName
-     * @return
+     * @param cataName 分类名称
+     * @return 分类全部词条页链接
      */
     private String geneCataListUrlFromCataName(String cataName) {
         return "http://fenlei.baike.com/" + cataName + "/list/";
@@ -305,7 +307,7 @@ public class BaikePageProcessor implements PageProcessor {
             isNotInDb = false;
         } else if (countOfTitle > 1) {
             isNotInDb = false;
-            log.warn("\n" + title + "在数据库中存在" + title + "条记录。" + "\n");
+            log.warn("\n" + title + "在数据库中存在" + countOfTitle + "条记录。" + "\n");
         }
 
         return isNotInDb;

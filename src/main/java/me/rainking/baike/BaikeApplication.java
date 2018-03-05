@@ -17,6 +17,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import us.codecraft.webmagic.Spider;
 import us.codecraft.webmagic.pipeline.PageModelPipeline;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 
@@ -35,6 +36,12 @@ public class BaikeApplication implements CommandLineRunner {
     @Autowired
     private BaikeMongodbPipeline baikeMongodbPipeline;
 
+    /**
+     *
+     */
+    @Autowired
+    private BaikePageProcessor baikePageProcessor;
+
     public static void main(String[] args) {
         SpringApplication.run(BaikeApplication.class, args);
     }
@@ -44,15 +51,15 @@ public class BaikeApplication implements CommandLineRunner {
      * 添加该方法是为了使用java -jar命令运行爬虫
      * 该方法在测试时也会运行，进行单元测试前需注释掉方法体
      *
-     * @param strings
-     * @throws Exception
+     * @param strings 运行参数
+     * @throws UnsupportedEncodingException url编码时的编码错误
      */
     @Override
-    public void run(String... strings) throws Exception {
+    public void run(String... strings) throws UnsupportedEncodingException {
 
         String category = URLEncoder.encode(nameOfRootCategory, "utf-8");
 
-        Spider.create(new BaikePageProcessor())
+        Spider.create(baikePageProcessor)
                 //将爬取的数据存入mngodb
                 .addPipeline(baikeMongodbPipeline)
                 //种子链接为军事分类首页与军事全部词条页
