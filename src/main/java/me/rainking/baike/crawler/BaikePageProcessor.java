@@ -1,5 +1,6 @@
 package me.rainking.baike.crawler;
 
+import lombok.extern.slf4j.Slf4j;
 import me.rainking.baike.repository.BaikeRepository;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -23,6 +24,7 @@ import static java.util.stream.Collectors.toList;
  * @Author: Rain
  * @Date: 2018/2/28 16:29
  */
+@Slf4j
 public class BaikePageProcessor implements PageProcessor {
 
     @Autowired
@@ -285,17 +287,28 @@ public class BaikePageProcessor implements PageProcessor {
      * @param url 包含标题信息的url
      * @return 是否不存在
      */
-    //todo
     private boolean notInDb(String url) {
+        String title = "";
         try {
-            String title = URLDecoder.decode(getNameFromUrl(url),"utf-8");
+            title = URLDecoder.decode(getNameFromUrl(url), "utf-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
 
+        long countOfTitle = baikeRepository.countByTitle(title);
 
+        boolean isNotInDb = false;
 
-        return false;
+        if (countOfTitle == 0) {
+            isNotInDb = true;
+        } else if (countOfTitle == 1) {
+            isNotInDb = false;
+        } else if (countOfTitle > 1) {
+            isNotInDb = false;
+            log.warn("\n" + title + "在数据库中存在" + title + "条记录。" + "\n");
+        }
+
+        return isNotInDb;
     }
 
 }
