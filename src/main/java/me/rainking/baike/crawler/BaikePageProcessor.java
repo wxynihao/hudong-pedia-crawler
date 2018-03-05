@@ -30,13 +30,17 @@ import static java.util.stream.Collectors.toList;
 @Component("baikePageProcessor")
 public class BaikePageProcessor implements PageProcessor {
 
-    @Autowired
-    private BaikeRepository baikeRepository;
+    private final BaikeRepository baikeRepository;
 
     private Site site = Site.me()
             .setDomain("baike.com")
             .setRetryTimes(3)
             .setSleepTime(1000);
+
+    @Autowired
+    public BaikePageProcessor(BaikeRepository baikeRepository) {
+        this.baikeRepository = baikeRepository;
+    }
 
     /**
      * process the page, extract urls to fetch, extract the data and store
@@ -91,7 +95,7 @@ public class BaikePageProcessor implements PageProcessor {
                     .all()
                     .stream()
                     //过滤掉已经下载入库的词条
-                    .filter(this::notInDb)
+//                    .filter(this::notInDb)
                     .map(this::getShortUrl).collect(toList());
 
             page.addTargetRequests(itemList);
@@ -291,6 +295,7 @@ public class BaikePageProcessor implements PageProcessor {
      * @return 是否不存在
      */
     private boolean notInDb(String url) {
+
         String title = "";
         try {
             title = URLDecoder.decode(getNameFromUrl(url), "utf-8");
