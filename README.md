@@ -11,11 +11,11 @@ jdk 8.0+ （使用了lambda表达式）
 
 [springboot](https://github.com/spring-projects/spring-boot)
 
-[mongodb]()
+[mongodb](https://www.mongodb.com/)
 
 [spring-data-mongodb](https://projects.spring.io/spring-data-mongodb/)
 
-[lombok]() (使用需要添加依赖，并安装IDE插件，[IDEA]()、[Eclipse]() 。不使用仅需为model添加getter/setter方法并删除@Data)
+[lombok](https://github.com/rzwitserloot/lombok) (使用需要添加依赖，并安装[IDE插件](https://projectlombok.org/setup/overview) 。不使用仅需为model添加getter/setter方法并删除@Data)
 
 ## 1.3 使用
 
@@ -29,7 +29,7 @@ jdk 8.0+ （使用了lambda表达式）
 
 ## 2.1 词条的发现逻辑
 
-###2.1.1 页面链接分析
+### 2.1.1 页面链接分析
 以“电影”分类为例。
 
 * “电影”分类的详情页面为 http://fenlei.baike.com/电影 [链接](http://fenlei.baike.com/%E7%94%B5%E5%BD%B1)。
@@ -82,6 +82,3 @@ webmagic-core依赖了log4j、Slf4j和jsoup等项目的特定版本的包，从�
 而在webmagic中实际只能获取到第1个a标签。
 
 我目前的做法是干脆直接获取“//p[@id='openCatp']/html()”，然后使用jsoup进行解析。
-
-
-

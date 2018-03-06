@@ -8,4 +8,4 @@ spring:
 #    root: warn
 #  file: /baike.log
 
-nameOfRootCategory: 电影
+nameOfRootCategory: 娱乐人物
