@@ -46,7 +46,7 @@ public class BaikeMongodbPipeline implements Pipeline {
 
         if (baikeRepository.countByTitle(title) == 0) {
             baikeRepository.save(baike);
-            log.warn("新增词条\t" + title + "。\n");
+            log.info("新增词条\t" + title + "。\n");
         }
     }
 }
