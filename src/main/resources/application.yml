@@ -3,9 +3,9 @@ spring:
     mongodb:
       uri: mongodb://127.0.0.1:27017/rain
 
-#logging:
-#  level:
-#    root: warn
+logging:
+  level:
+    root: warn
 #  file: /baike.log
 
-nameOfRootCategory: 娱乐人物
+nameOfRootCategory: 军事

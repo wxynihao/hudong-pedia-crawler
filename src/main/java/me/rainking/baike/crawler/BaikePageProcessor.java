@@ -22,9 +22,9 @@ import java.util.stream.Collectors;
 import static java.util.stream.Collectors.toList;
 
 /**
- * @description: 爬虫的页面处理逻辑
- * @author: Rain
- * @date: 2018/2/28 16:29
+ * @Description: 爬虫的页面处理逻辑
+ * @Author: Rain
+ * @Date: 2018/2/28 16:29
  */
 @Slf4j
 @Component("baikePageProcessor")
@@ -34,8 +34,8 @@ public class BaikePageProcessor implements PageProcessor {
 
     private Site site = Site.me()
             .setDomain("baike.com")
-            .setRetryTimes(3)
-            .setSleepTime(1000);
+            .setRetryTimes(5)
+            .setSleepTime(2000);
 
     @Autowired
     public BaikePageProcessor(BaikeRepository baikeRepository) {
@@ -50,10 +50,10 @@ public class BaikePageProcessor implements PageProcessor {
     @Override
     public void process(Page page) {
         //定义如何抽取页面信息，并保存下来
-        //分类，需处理
+        //分类
         String rawCategory = page.getHtml().xpath("//p[@id='openCatp']/html()").toString();
         page.putField("category", convertCategoryHtml(rawCategory));
-        //摘要，需处理
+        //摘要
         String rawSummary = page.getHtml().xpath("//div[@class='summary']/html()").toString();
         page.putField("summary", convertSummaryHtml(rawSummary));
         //标题
@@ -71,36 +71,34 @@ public class BaikePageProcessor implements PageProcessor {
             page.setSkip(true);
         }
 
-        //从页面发现后续的url地址来抓取
-        //分类详情页获取子分类的链接
         String pageUrl = page.getUrl().toString();
-        if (pageUrl.contains("fenlei") && !pageUrl.contains("list")) {
-            List<String> catalogList = page.getHtml()
-                    .xpath("//div[@class='sort']//p[2]").links().all()
-                    .stream().map(this::getShortUrl).collect(toList());
-            page.addTargetRequests(catalogList);
+        if (pageUrl.contains("fenlei")) {
+            //从页面发现后续的url地址来抓取
+            //分类详情页获取子分类的链接
+            if (!pageUrl.contains("list")) {
+                List<String> catalogList = page.getHtml()
+                        .xpath("//div[@class='sort']//p[2]").links().all()
+                        .stream().map(this::getShortUrl).collect(toList());
+                page.addTargetRequests(catalogList);
+                //分类全部词条页链接
+                List<String> catalogItemList = catalogList.stream()
+                        .map(url -> geneCataListUrlFromCataName(getNameFromUrl(url))).collect(toList());
+                page.addTargetRequests(catalogItemList);
+            } else {
+                //分类全部词条页获取词条页的链接
+                List<String> itemList = page.getHtml()
+                        .xpath("//div[@class='content']")
+                        .links()
+                        .regex("http://www\\.baike\\.com/wiki/.*")
+                        .all()
+                        .stream()
+                        //过滤掉已经下载入库的词条
+                        .filter(this::notInDb)
+                        .map(this::getShortUrl).collect(toList());
 
-            //分类全部词条页链接
-            List<String> catalogItemList = catalogList.stream()
-                    .map(url -> geneCataListUrlFromCataName(getNameFromUrl(url))).collect(toList());
-            page.addTargetRequests(catalogItemList);
+                page.addTargetRequests(itemList);
+            }
         }
-
-
-        //分类全部词条页获取词条页的链接
-        if (pageUrl.contains("list")) {
-            List<String> itemList = page.getHtml()
-                    .links()
-                    .regex("http://www\\.baike\\.com/wiki/.*")
-                    .all()
-                    .stream()
-                    //过滤掉已经下载入库的词条
-//                    .filter(this::notInDb)
-                    .map(this::getShortUrl).collect(toList());
-
-            page.addTargetRequests(itemList);
-        }
-
     }
 
     /**
@@ -128,7 +126,6 @@ public class BaikePageProcessor implements PageProcessor {
                 .replace("?", "\\?").replace(",", "\\,")
                 .replace(".", "\\.").replace("&", "\\&");
     }
-
 
     /**
      * 解析tidyText处理后的词条内容
@@ -309,11 +306,12 @@ public class BaikePageProcessor implements PageProcessor {
 
         if (countOfTitle == 0) {
             isNotInDb = true;
+            log.warn("\n" + title + "\t\t为新增词条。\n");
         } else if (countOfTitle == 1) {
             isNotInDb = false;
         } else if (countOfTitle > 1) {
             isNotInDb = false;
-            log.warn("\n" + title + "在数据库中存在" + countOfTitle + "条记录。" + "\n");
+            log.warn("\n" + title + "\t\t在数据库中存在" + countOfTitle + "条记录。" + "\n");
         }
 
         return isNotInDb;

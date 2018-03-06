@@ -16,8 +16,12 @@ import us.codecraft.webmagic.pipeline.Pipeline;
 @Component("baikeMongodbPipeline")
 public class BaikeMongodbPipeline implements Pipeline {
 
+    private final BaikeRepository baikeRepository;
+
     @Autowired
-    private BaikeRepository baikeRepository;
+    public BaikeMongodbPipeline(BaikeRepository baikeRepository) {
+        this.baikeRepository = baikeRepository;
+    }
 
     /**
      * Process extracted results.
@@ -29,14 +33,14 @@ public class BaikeMongodbPipeline implements Pipeline {
     public void process(ResultItems resultItems, Task task) {
 
 
-        Baike baike = new Baike(resultItems.get("category"),
-                resultItems.get("summary"),
-                resultItems.get("title"),
-                resultItems.get("content"),
-                resultItems.get("inforBox")
-        );
-
-        baikeRepository.save(baike);
+//        Baike baike = new Baike(resultItems.get("category"),
+//                resultItems.get("summary"),
+//                resultItems.get("title"),
+//                resultItems.get("content"),
+//                resultItems.get("inforBox")
+//        );
+//
+//        baikeRepository.save(baike);
 
     }
 }
