@@ -1,5 +1,6 @@
 package me.rainking.baike.crawler;
 
+import lombok.extern.slf4j.Slf4j;
 import me.rainking.baike.model.Baike;
 import me.rainking.baike.repository.BaikeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import us.codecraft.webmagic.pipeline.Pipeline;
  * @Date: 2018/3/4 0:54
  */
 @Component("baikeMongodbPipeline")
+@Slf4j
 public class BaikeMongodbPipeline implements Pipeline {
 
     private final BaikeRepository baikeRepository;
@@ -33,14 +35,18 @@ public class BaikeMongodbPipeline implements Pipeline {
     public void process(ResultItems resultItems, Task task) {
 
 
-//        Baike baike = new Baike(resultItems.get("category"),
-//                resultItems.get("summary"),
-//                resultItems.get("title"),
-//                resultItems.get("content"),
-//                resultItems.get("inforBox")
-//        );
-//
-//        baikeRepository.save(baike);
+        String title = resultItems.get("title");
 
+        Baike baike = new Baike(resultItems.get("category"),
+                resultItems.get("summary"),
+                title,
+                resultItems.get("content"),
+                resultItems.get("inforBox")
+        );
+
+        if (baikeRepository.countByTitle(title) == 0) {
+            baikeRepository.save(baike);
+            log.warn("新增词条\t" + title + "。\n");
+        }
     }
 }

@@ -34,6 +34,7 @@ public class BaikePageProcessor implements PageProcessor {
 
     private Site site = Site.me()
             .setDomain("baike.com")
+            //网络情况不稳定时，可通过调大重试次数减少页面下载失败的次数
             .setRetryTimes(5)
             .setSleepTime(2000);
 
@@ -306,7 +307,6 @@ public class BaikePageProcessor implements PageProcessor {
 
         if (countOfTitle == 0) {
             isNotInDb = true;
-            log.warn("\n" + title + "\t\t为新增词条。\n");
         } else if (countOfTitle == 1) {
             isNotInDb = false;
         } else if (countOfTitle > 1) {

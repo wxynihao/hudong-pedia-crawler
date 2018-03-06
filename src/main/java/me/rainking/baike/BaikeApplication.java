@@ -1,5 +1,6 @@
 package me.rainking.baike;
 
+import lombok.extern.slf4j.Slf4j;
 import me.rainking.baike.crawler.BaikeMongodbPipeline;
 import me.rainking.baike.crawler.BaikePageProcessor;
 import org.springframework.beans.factory.annotation.Autowired;

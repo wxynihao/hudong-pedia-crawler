@@ -15,7 +15,8 @@ jdk 8.0+ （使用了lambda表达式）
 
 [spring-data-mongodb](https://projects.spring.io/spring-data-mongodb/)
 
-[lombok](https://github.com/rzwitserloot/lombok) (使用需要添加依赖，并安装[IDE插件](https://projectlombok.org/setup/overview) 。不使用仅需为model添加getter/setter方法并删除@Data)
+[lombok](https://github.com/rzwitserloot/lombok) (使用需要添加依赖，并安装[IDE插件](https://projectlombok.org/setup/overview) 。
+不使用仅需为model添加getter/setter方法并删除@Data，删除@Slf4j及log)
 
 ## 1.3 使用
 
@@ -23,7 +24,9 @@ jdk 8.0+ （使用了lambda表达式）
 
 2. 修改application-dev.yml中的nameOfRootCategory为需要爬取的根分类；
 
-3. 直接运行BaikeApplication.main，或install后使用 java -jar 命令运行。
+3. 直接运行BaikeApplication.main，或install后使用 java -jar 命令运行；
+
+4. 该爬虫包含去重逻辑，可分布式部署，爬虫停止后重启爬虫即可，也可通过重启爬取新增词条和下载失败的词条。
 
 # 2 二次开发
 
@@ -58,6 +61,16 @@ jdk 8.0+ （使用了lambda表达式）
 基于这个特点，完全可以根据词条的名称(title)进行判重。
 
 目前采用的是数据库查询的方式判重，在数据量较少时效率还可以接受，数据增加后将改为一次性构造包含所有title的set然后再进行判重。
+
+本爬虫采用了两次排重，第一次在往下载队列中添加链接时进行，排除掉可确定排除的词条，减少下载和解析的负荷。第二次在解析后入库前，可精确判断是否重复。
+
+### 2.3.1 同名异义
+
+最明显的就是人名，如“李继开”，同时存在画家和开国少将两个词条，此时就必须获取页面后判断“李继开[开国少将]”。
+
+### 2.3.2 异名同义
+
+“美国A-3攻击机” 与 “A-3攻击机” 是同义词，页面都指向“美国A-3攻击机”，此时就需要在解析页面后才能判重。
 
 # 3 趟坑提示
 
