@@ -21,6 +21,11 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 
+/**
+ * @Description: 主程序
+ * @Author: Rain
+ * @Date: 2018/2/28 16:29
+ */
 @SpringBootApplication
 public class BaikeApplication implements CommandLineRunner {
 

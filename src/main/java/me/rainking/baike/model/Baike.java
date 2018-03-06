@@ -44,11 +44,6 @@ public class Baike {
      */
     private Map<String, String> inforBox;
 
-
-    /**
-     * 某些第三方库方法会调用默认构造方法进行初始化
-     * 在添加了带参的构造方法后，需同时提供无参构造方法
-     */
     public Baike() {
     }
 

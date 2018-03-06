@@ -22,9 +22,9 @@ import java.util.stream.Collectors;
 import static java.util.stream.Collectors.toList;
 
 /**
- * @Description: 爬虫的页面处理逻辑
- * @Author: Rain
- * @Date: 2018/2/28 16:29
+ * @description: 爬虫的页面处理逻辑
+ * @author: Rain
+ * @date: 2018/2/28 16:29
  */
 @Slf4j
 @Component("baikePageProcessor")
@@ -264,11 +264,11 @@ public class BaikePageProcessor implements PageProcessor {
     /**
      * 根据分类名称，生成分类全部词条页面的链接
      *
-     * @param cataName 分类名称
+     * @param cateName 分类名称
      * @return 分类全部词条页链接
      */
-    private String geneCataListUrlFromCataName(String cataName) {
-        return "http://fenlei.baike.com/" + cataName + "/list/";
+    private String geneCataListUrlFromCataName(String cateName) {
+        return "http://fenlei.baike.com/" + cateName + "/list/";
     }
 
     /**
