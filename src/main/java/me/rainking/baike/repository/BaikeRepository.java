@@ -3,8 +3,6 @@ package me.rainking.baike.repository;
 import me.rainking.baike.model.Baike;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-import java.util.List;
-
 /**
  * @Description:
  * @Author: Rain

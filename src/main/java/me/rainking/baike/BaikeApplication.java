@@ -1,22 +1,13 @@
 package me.rainking.baike;
 
-import lombok.extern.slf4j.Slf4j;
 import me.rainking.baike.crawler.BaikeMongodbPipeline;
 import me.rainking.baike.crawler.BaikePageProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.boot.web.support.SpringBootServletInitializer;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.EnableScheduling;
 import us.codecraft.webmagic.Spider;
-import us.codecraft.webmagic.pipeline.PageModelPipeline;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;

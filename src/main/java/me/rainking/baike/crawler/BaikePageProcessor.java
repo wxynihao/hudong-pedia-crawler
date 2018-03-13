@@ -113,6 +113,12 @@ public class BaikePageProcessor implements PageProcessor {
         return site;
     }
 
+    /**
+     * 转义正则表达式中的特殊字符
+     *
+     * @param str 正则表达式
+     * @return 转义后的正则表达式
+     */
     private String makeQueryStringAllRegExp(String str) {
         if (str == null || "".equals(str.trim())) {
             return str;

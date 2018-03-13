@@ -1,5 +1,5 @@
 # 1 概述
-本项目是基于 webmagic、springboot和 mongodb 的用于爬取互动百科数据的爬虫。
+本项目是基于 web magic、spring boot和 mongodb 的用于爬取互动百科数据的爬虫。
 
 ## 1.1 功能
 该项目爬虫适用于爬取互动百科某分类及其子分类的全部词条。
@@ -7,9 +7,9 @@
 ## 1.2 技术选型
 jdk 8.0+ （使用了lambda表达式）
 
-[webmagic](https://github.com/code4craft/webmagic)
+[web magic](https://github.com/code4craft/webmagic)
 
-[springboot](https://github.com/spring-projects/spring-boot)
+[spring boot](https://github.com/spring-projects/spring-boot)
 
 [mongodb](https://www.mongodb.com/)
 
